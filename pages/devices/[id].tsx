@@ -95,8 +95,6 @@ const Device = () => {
         videoRef?.current?.addEventListener("loadeddata", handleWindowResize);
     }, []);
 
-    console.log(deviceData.data);
-
     if (!deviceData.isSuccess) {
         return "loading";
     }
