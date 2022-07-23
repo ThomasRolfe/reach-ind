@@ -12,8 +12,6 @@ import Video from "../../components/video";
 import BoundingBox from "../../components/boundingBox";
 import ColourSwatch from "../../components/colourSwatch";
 
-let pages: page[] = [{ name: "Devices", href: "/", current: false }];
-
 const Device = () => {
     const router = useRouter();
     const { id } = router.query;
@@ -21,9 +19,14 @@ const Device = () => {
     const [currentFrame, setCurrentFrame] = useState<number>(1);
     const [rgbValues, setRgbValues] = useState<undefined | rgbValue>();
 
-    if (typeof id === "string") {
-        pages.push({ name: id, href: `/${id}`, current: true });
-    }
+    const pages: page[] = [
+        { name: "Devices", href: "/", current: false },
+        {
+            name: typeof id === "string" ? id : "",
+            href: `/${id}`,
+            current: true,
+        },
+    ];
 
     const videoRef = useRef<HTMLVideoElement>(null);
 
