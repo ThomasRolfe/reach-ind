@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export interface page {
-    name: string | unknown;
+    name: string | undefined;
     href: string;
     current: boolean;
 }
@@ -11,7 +11,7 @@ const Breadcrumbs = ({ pages }: { pages: page[] }) => {
         <nav className="flex my-4 -ml-4" aria-label="Breadcrumb">
             <ol role="list" className="flex items-center space-x-4">
                 {pages.map((page, index) => (
-                    <li key={page.name}>
+                    <li key={index}>
                         <div className="flex items-center">
                             {index !== 0 && (
                                 <svg
@@ -31,7 +31,7 @@ const Breadcrumbs = ({ pages }: { pages: page[] }) => {
                                         page.current ? "page" : undefined
                                     }
                                 >
-                                    {page.name}
+                                    {page?.name}
                                 </a>
                             </Link>
                         </div>
