@@ -6,13 +6,19 @@ import Layout from "../../components/layout";
 import Card from "../../components/card";
 import Title from "../../components/title";
 import { rgbValue } from "../../types/rgbValueType";
+import Breadcrumbs from "../../components/breadcrumbs";
 
 const Device = () => {
     const router = useRouter();
-    const { id }: { id: string } = router.query;
+    const { id } = router.query;
     const [boundingBox, setBoundingBox] = useState<{}>({});
     const [currentFrame, setCurrentFrame] = useState<string>("1");
     const [rgbValues, setRgbValues] = useState<null | rgbValue>(null);
+
+    const pages = [
+        { name: "Devices", href: "/", current: false },
+        { name: id, href: `/${id}`, current: true },
+    ];
 
     const videoRef = useRef<HTMLVideoElement>();
 
@@ -95,9 +101,11 @@ const Device = () => {
 
     return (
         <Layout>
+            <Breadcrumbs pages={pages} />
             <Title>Device: {id}</Title>
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-4 xl:grid-cols-5">
                 <Card className="lg:col-span-2 xl:col-span-3">
+                    <h2 className="font-bold text-xl mb-4">Video</h2>
                     <div className="relative">
                         <video
                             id="video"
@@ -105,6 +113,7 @@ const Device = () => {
                             height="720"
                             controls
                             ref={videoRef}
+                            className="rounded"
                         >
                             <source
                                 src={deviceData?.data?.output?.videofiles}
@@ -112,7 +121,7 @@ const Device = () => {
                             />
                         </video>
                         <div
-                            className="border border-1 border-white border-dashed absolute z-10"
+                            className="border-2 border-red-500  absolute z-10"
                             style={boundingBox}
                         ></div>
                     </div>
@@ -147,7 +156,7 @@ const Device = () => {
 
                         <div>
                             <div
-                                className="w-5/6 mx-auto h-36"
+                                className="w-5/6 mx-auto h-36 rounded"
                                 style={{
                                     backgroundColor: `rgb(${rgbValues?.avgR}, ${rgbValues?.avgG}, ${rgbValues?.avgB})`,
                                 }}
@@ -155,9 +164,11 @@ const Device = () => {
                         </div>
                     </div>
                     <hr></hr>
-                    <div className="mt-4">
+                    <div className="p-4 mt-4 bg-brand-light-blue border border-slate-300 rounded flex justify-between">
                         <b>Current frame: </b>
-                        <span id="currentframe">{currentFrame}</span>
+                        <span id="currentframe" className="font-bold">
+                            {currentFrame}
+                        </span>
                     </div>
                 </Card>
             </div>

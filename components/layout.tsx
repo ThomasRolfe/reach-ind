@@ -26,18 +26,10 @@ const Layout = ({ children }) => {
                                 <Link key={item.name} href={item.href}>
                                     <a
                                         className={
-                                            "text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                            "text-white bg-[#4AC7A9] hover:bg-[#37af93] group flex items-center px-2 py-2 text-sm font-medium rounded-md justify-center"
                                         }
                                     >
-                                        <item.icon
-                                            className={
-                                                "text-gray-400 group-hover:text-gray-500  mr-3 flex-shrink-0 h-6 w-6"
-                                            }
-                                            aria-hidden="true"
-                                        />
-                                        <span className="flex-1">
-                                            {item.name}
-                                        </span>
+                                        <span>{item.name}</span>
                                     </a>
                                 </Link>
                             ))}
@@ -45,7 +37,7 @@ const Layout = ({ children }) => {
                     </div>
                 </div>
             </div>
-            <div className="lg:pl-64 flex flex-col flex-1 bg-sky-50">
+            <div className="lg:pl-64 flex flex-col flex-1 bg-brand-light-blue min-h-screen">
                 <div className="container mx-auto p-4 sm:p-6 lg:p-8 ">
                     {children}
                 </div>
