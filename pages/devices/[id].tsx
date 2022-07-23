@@ -95,8 +95,24 @@ const Device = () => {
         videoRef?.current?.addEventListener("loadeddata", handleWindowResize);
     }, []);
 
+    console.log(deviceData.data);
+
     if (!deviceData.isSuccess) {
         return "loading";
+    }
+
+    if (deviceData.data.err) {
+        return (
+            <Layout>
+                <Breadcrumbs pages={pages} />
+                <Title>Device: {id}</Title>
+                <p className="my-4 font-bold">
+                    Oops, it looks like there is no data for this device. Please
+                    return to the devices menu.
+                </p>
+                <p>Error: {deviceData.data.err}</p>
+            </Layout>
+        );
     }
 
     return (
