@@ -5,7 +5,7 @@ const ColourSwatch = ({
     rgb,
 }: {
     className: string;
-    rgb: rgbValue | null;
+    rgb: rgbValue | undefined;
 }) => {
     return (
         <div

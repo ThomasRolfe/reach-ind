@@ -3,7 +3,7 @@ const Card = ({
     className,
 }: {
     children: React.ReactNode;
-    className: string | null;
+    className?: string | null;
 }) => {
     return (
         <div
