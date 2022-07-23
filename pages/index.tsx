@@ -5,21 +5,14 @@ import Breadcrumbs from "../components/breadcrumbs";
 import Card from "../components/card";
 import Layout from "../components/layout";
 import Title from "../components/title";
+import { devicesQuery } from "../queries/devices";
 
 const Home: NextPage = () => {
     const pages = [{ name: "Devices", href: "/", current: true }];
 
-    const query = async () => {
-        return fetch(
-            "https://mockapi.lumi.systems/getdevices?" +
-                new URLSearchParams({
-                    userId: "100",
-                    orgId: "Lumi",
-                })
-        ).then((res) => res.json());
-    };
-
-    const { data: devices, isSuccess } = useQuery(["devices"], query);
+    const { data: devices, isSuccess } = useQuery(["devices"], () =>
+        devicesQuery("100", "Lumi")
+    );
 
     if (!isSuccess) "Loading";
 

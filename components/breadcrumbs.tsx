@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-interface page {
-    name: string;
+export interface page {
+    name: string | unknown;
     href: string;
     current: boolean;
 }

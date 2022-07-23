@@ -6,30 +6,25 @@ import Layout from "../../components/layout";
 import Card from "../../components/card";
 import Title from "../../components/title";
 import { rgbValue } from "../../types/rgbValueType";
-import Breadcrumbs from "../../components/breadcrumbs";
+import Breadcrumbs, { page } from "../../components/breadcrumbs";
+import { deviceDataQuery } from "../../queries/deviceData";
+import Video from "../../components/video";
+import BoundingBox from "../../components/boundingBox";
+import ColourSwatch from "../../components/colourSwatch";
 
 const Device = () => {
     const router = useRouter();
     const { id } = router.query;
     const [boundingBox, setBoundingBox] = useState<{}>({});
-    const [currentFrame, setCurrentFrame] = useState<string>("1");
+    const [currentFrame, setCurrentFrame] = useState<number>(1);
     const [rgbValues, setRgbValues] = useState<null | rgbValue>(null);
 
-    const pages = [
+    const pages: page[] = [
         { name: "Devices", href: "/", current: false },
         { name: id, href: `/${id}`, current: true },
     ];
 
-    const videoRef = useRef<HTMLVideoElement>();
-
-    const deviceDataQuery = async (queryKey: string) => {
-        return fetch(
-            "https://mockapi.lumi.systems/getdevicedata?" +
-                new URLSearchParams({
-                    deviceId: queryKey,
-                })
-        ).then((res) => res.json());
-    };
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     const deviceData = useQuery(
         ["deviceData", id],
@@ -37,7 +32,7 @@ const Device = () => {
         { enabled: !!id }
     );
 
-    const frameNumber = (frameRate, time) => {
+    const frameNumber = (frameRate: number, time: number): number => {
         let singleFrameTimeInSeconds = 1 / frameRate;
         return Math.round(time / singleFrameTimeInSeconds);
     };
@@ -55,7 +50,7 @@ const Device = () => {
             return;
         }
 
-        setRgbValues(frameData.frame_data[currentFrame]);
+        setRgbValues(frameData.frame_data[String(currentFrame)]);
     }, [currentFrame, setRgbValues]);
 
     useEffect(() => {
@@ -67,12 +62,13 @@ const Device = () => {
     }, [videoRef, setVideoFrame, deviceData]);
 
     const handleWindowResize = () => {
-        if (!videoRef.current) {
+        const videoHeight = videoRef?.current?.height;
+        const videoRenderedHeight = videoRef?.current?.offsetHeight;
+
+        if (!videoHeight || !videoRenderedHeight) {
             return;
         }
 
-        const videoHeight = videoRef.current.height;
-        const videoRenderedHeight = videoRef.current.offsetHeight;
         const sizeRatio = videoRenderedHeight / videoHeight;
 
         setBoundingBox({
@@ -92,7 +88,7 @@ const Device = () => {
 
     useEffect(() => {
         window.addEventListener("resize", handleWindowResize);
-        videoRef.current?.addEventListener("resize", handleWindowResize);
+        videoRef?.current?.addEventListener("loadeddata", handleWindowResize);
     }, []);
 
     if (!deviceData.isSuccess) {
@@ -107,23 +103,11 @@ const Device = () => {
                 <Card className="lg:col-span-2 xl:col-span-3">
                     <h2 className="font-bold text-xl mb-4">Video</h2>
                     <div className="relative">
-                        <video
-                            id="video"
-                            width="1280"
-                            height="720"
-                            controls
+                        <Video
+                            source={deviceData?.data?.output?.videofiles}
                             ref={videoRef}
-                            className="rounded"
-                        >
-                            <source
-                                src={deviceData?.data?.output?.videofiles}
-                                type="video/mp4"
-                            />
-                        </video>
-                        <div
-                            className="border-2 border-red-500  absolute z-10"
-                            style={boundingBox}
-                        ></div>
+                        />
+                        <BoundingBox style={boundingBox} />
                     </div>
                 </Card>
                 <Card className="col-span-1 lg:col-span-2">
@@ -148,19 +132,17 @@ const Device = () => {
                                 <li className="flex justify-between">
                                     <b>Histogram diff:</b>{" "}
                                     <span>
-                                        {rgbValues?.histDiff.toFixed(2)}
+                                        {rgbValues?.histDiff?.toFixed(2)}
                                     </span>
                                 </li>
                             </ul>
                         </div>
 
                         <div>
-                            <div
+                            <ColourSwatch
                                 className="w-5/6 mx-auto h-36 rounded"
-                                style={{
-                                    backgroundColor: `rgb(${rgbValues?.avgR}, ${rgbValues?.avgG}, ${rgbValues?.avgB})`,
-                                }}
-                            ></div>
+                                rgb={rgbValues}
+                            />
                         </div>
                     </div>
                     <hr></hr>

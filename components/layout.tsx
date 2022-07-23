@@ -1,15 +1,13 @@
-import { HomeIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 
 const navigation = [
     {
         name: "Devices",
         href: "/",
-        icon: HomeIcon,
     },
 ];
 
-const Layout = ({ children }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="min-h-screen">
             <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 min-h-screen">
